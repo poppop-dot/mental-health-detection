@@ -1,0 +1,31 @@
+# 直接生成忽略规则文件
+cat <<EOF > .gitignore
+# 忽略 Python 缓存和虚拟环境
+__pycache__/
+*.pyc
+.env
+.venv/
+venv/
+env/
+
+# 忽略大数据集
+*.parquet
+data/
+
+# 忽略大模型权重文件 (GitHub 限制 100MB)
+*.bin
+*.pt
+*.pth
+*.safetensors
+*.ckpt
+
+# 忽略训练输出目录 (通常很大)
+mentalbert_finetuned_final/
+mentalbert_finetuned/
+results/
+logs/
+
+# 忽略 IDE 配置
+.vscode/
+.idea/
+EOF
