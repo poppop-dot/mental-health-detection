@@ -1,16 +1,29 @@
-# 🧠 Mental Health Risk Detection System
+# Mental Health Risk Detection System
 
 > 基于 MentalBERT 微调的心理健康风险智能检测系统
 
 ## 项目简介 (Introduction)
 
-本项目旨在利用自然语言处理（NLP）技术，从非结构化文本中自动识别潜在的心理健康风险（如抑郁倾向）。核心模型基于 **MentalBERT** 进行微调，针对医疗健康领域的数据特点进行了深度优化。
+本项目旨在利用自然语言处理（NLP）技术，从非结构化文本中自动识别潜在的心理健康风险（如抑郁倾向）。核心模型基于 **[MentalBERT](https://huggingface.co/mental/mental-bert-base-uncased)** 进行微调，针对医疗健康领域的数据特点进行了深度优化。
 
 系统具备从数据处理、模型训练、效果评估到服务部署的全流程能力，旨在为早期心理干预提供技术辅助。
 
+## 模型与数据来源 (Credits)
+
+本项目基于以下开源资源进行开发，特此致谢：
+
+* **预训练模型 (Base Model)**: [mental/mental-bert-base-uncased](https://huggingface.co/mental/mental-bert-base-uncased)
+* *专门在心理健康相关 Reddit 数据集上预训练的 BERT 模型。*
+
+
+* **数据集 (Dataset)**: [Dreaddit (andreagasparini/dreaddit)](https://huggingface.co/datasets/andreagasparini/dreaddit)
+* *一个涵盖五种不同心理健康领域的 Reddit 数据集（PTSD, Depression, Anxiety 等）。*
+
+
+
 ## 核心特性 (Key Features)
 
-* **领域专用模型**: 采用在心理健康语料上预训练的 `MentalBERT` 作为基座，语义理解更精准。
+* **领域专用模型**: 采用 `MentalBERT` 作为基座，相比通用 BERT，对心理学术语和隐晦表达的理解更精准。
 * **单卡训练优化**: 实现了 **梯度累积 (Gradient Accumulation)** 和 **混合精度训练 (FP16)**，在有限显存（<8G）下实现了大 Batch Size 的训练效果。
 * **训练策略增强**: 引入 **早停机制 (Early Stopping)** 防止过拟合，自动保存最佳权重。
 * **高召回率**: 针对医疗场景优化，实现了 **87.3% 的召回率 (Recall)**，最大程度降低漏报风险。
@@ -30,9 +43,7 @@
 | **F1-Score** | **83.6%** | 精确率与召回率的平衡 |
 | **Accuracy (准确率)** | 82.4% | 整体分类准确度 |
 
-*注：模型采用“宁可误报，不可漏报”的策略，误报（False Positive）主要集中在模糊语义样本，符合筛查工具的设计原则。*
-
-## 🛠️ 安装指南 (Installation)
+## 安装指南 (Installation)
 
 1. **克隆仓库**
 ```bash
@@ -64,7 +75,9 @@ pip install gradio fastapi uvicorn
 
 ### 1. 数据准备
 
-请确保 `data/` 目录下包含 `train-*.parquet` 和 `test-*.parquet` 数据文件。
+本项目使用 [Dreaddit](https://huggingface.co/datasets/andreagasparini/dreaddit) 数据集。
+请确保下载并将 parquet 文件放置在 `data/` 目录下（如 `train-*.parquet` 和 `test-*.parquet`）。
+
 运行数据探查脚本，检查数据分布：
 
 ```bash
@@ -114,11 +127,11 @@ python serve_model.py
 
 *API 文档地址: http://localhost:8000/docs*
 
-## 项目结构 (Structure)
+## 📂 项目结构 (Structure)
 
 ```text
 mental-health-detection/
-├── data/                       # 数据集目录 (Parquet格式)
+├── data/                       # 数据集目录 (推荐放入 Dreaddit Parquet 文件)
 ├── mentalbert/                 # 原始预训练模型权重
 ├── mentalbert_finetuned_final/ # 训练输出目录 (保存最佳模型)
 │   └── final_model/
